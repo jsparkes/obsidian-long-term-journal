@@ -1,11 +1,21 @@
 import { App, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 interface LongTermJournalSettings {
-	mySetting: string;
+	journalNote: string
+	includeWeeks: boolean;
+	yearFormat: string;
+	monthFormat: string;
+	weekFormat: string;
+	dayFormat: string;
 }
 
 const DEFAULT_SETTINGS: LongTermJournalSettings = {
-	mySetting: 'default'
+	journalNote: "journal.md",
+	includeWeeks: true,
+	yearFormat: "YYYY",
+	monthFormat: "YYYY-MM MMM",
+	weekFormat: "YYYY-MM-WW WWW",
+	dayFormat: "YYYY-MM-DD DDD"
 }
 
 export default class LongTermJournal extends Plugin {
@@ -40,7 +50,7 @@ export default class LongTermJournal extends Plugin {
 			}
 		});
 
-		this.addSettingTab(new SampleSettingTab(this.app, this));
+		this.addSettingTab(new LongTermJournalSettingTab(this.app, this));
 
 		this.registerCodeMirror((cm: CodeMirror.Editor) => {
 			console.log('codemirror', cm);
@@ -82,7 +92,7 @@ class SampleModal extends Modal {
 	}
 }
 
-class SampleSettingTab extends PluginSettingTab {
+class LongTermJournalSettingTab extends PluginSettingTab {
 	plugin: LongTermJournal;
 
 	constructor(app: App, plugin: LongTermJournal) {
@@ -95,18 +105,64 @@ class SampleSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
+		containerEl.createEl('h2', {text: 'Settings for Long Term Journal.'});
 
 		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
-			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue('')
-				.onChange(async (value) => {
-					console.log('Secret: ' + value);
-					this.plugin.settings.mySetting = value;
-					await this.plugin.saveSettings();
-				}));
+			.setName("Journal Note")
+			.setDesc("Note that contains journal entries")
+			.addText((text) =>
+				text.setValue(this.plugin.settings.journalNote)
+					.onChange(async (value) => {
+						this.plugin.settings.journalNote = value
+						await this.plugin.saveSettings()
+					}));
+
+		new Setting(containerEl)
+			.setName("Year Format")
+			.setDesc("")
+			.addText((text) =>
+				text.setValue(this.plugin.settings.yearFormat)
+					.onChange(async (value) => {
+						this.plugin.settings.yearFormat = value
+						await this.plugin.saveSettings()
+					}));
+		
+		new Setting(containerEl)
+			.setName("Month Format")
+			.setDesc("")
+			.addText((text) =>
+				text.setValue(this.plugin.settings.monthFormat)
+					.onChange(async (value) => {
+						this.plugin.settings.monthFormat = value
+						await this.plugin.saveSettings()
+					}));
+		
+		new Setting(containerEl)
+			.setName("Week Format")
+			.setDesc("")
+			.addText((text) =>
+				text.setValue(this.plugin.settings.weekFormat)
+					.onChange(async (value) => {
+						this.plugin.settings.weekFormat = value
+						await this.plugin.saveSettings()
+					}));
+
+		new Setting(containerEl)
+			.setName("Day Format")
+			.setDesc("")
+			.addText((text) =>
+				text.setValue(this.plugin.settings.dayFormat)
+					.onChange(async (value) => {
+						this.plugin.settings.dayFormat = value
+						await this.plugin.saveSettings()
+					}));
+
+		new Setting(containerEl).setName("Include weeks?").addToggle((toggle) => {
+			toggle.setValue(this.plugin.settings.includeWeeks)
+			toggle.onChange(async (value) => {
+				this.plugin.settings.includeWeeks = value
+				await this.plugin.saveSettings()
+			})
+		});
 	}
 }
