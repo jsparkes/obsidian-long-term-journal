@@ -1,15 +1,15 @@
 import { App, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
-interface MyPluginSettings {
+interface LongTermJournalSettings {
 	mySetting: string;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: LongTermJournalSettings = {
 	mySetting: 'default'
 }
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class LongTermJournal extends Plugin {
+	settings: LongTermJournalSettings;
 
 	async onload() {
 		console.log('loading plugin');
@@ -83,9 +83,9 @@ class SampleModal extends Modal {
 }
 
 class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+	plugin: LongTermJournal;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: LongTermJournal) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
